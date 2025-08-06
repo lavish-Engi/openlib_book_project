@@ -28,14 +28,12 @@ db.close()
 st.subheader("📄 Book Data Table")
 
 try:
-    # Assuming 5 columns are returned: (ID, Title, Author, Year, Rating)
-    df = pd.DataFrame(books, columns=["ID", "Title", "Author", "Year", "Rating"])
-    df = df.drop(columns=["ID"])  # Remove ID from display
-except Exception as e:
+    # Create DataFrame with correct column mapping
+    df = pd.DataFrame(books, columns=["Title", "Author", "Year", "Rating"])
+    st.dataframe(df)
+except ValueError as e:
     st.error(f"❌ Data format error: {e}")
     st.stop()
-
-st.dataframe(df)
 
 # Step 5: Visualize
 st.subheader("📊 Books by First Publish Year")

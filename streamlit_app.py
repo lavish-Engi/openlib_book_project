@@ -25,14 +25,18 @@ books = db.fetch_all_books()
 db.close()
 
 # Step 4: Show Data
-df = pd.DataFrame(books)
-df.columns = ["Title", "Author", "Year", "Rating"]
-
 st.subheader("📄 Book Data Table")
+
+# Create DataFrame safely
+try:
+    df = pd.DataFrame(books, columns=["Title", "Author", "Year", "Rating"])
+except ValueError as e:
+    st.error(f"❌ Data format error: {e}")
+    st.stop()
+
 st.dataframe(df)
 
 # Step 5: Visualize
 st.subheader("📊 Books by First Publish Year")
 visualizer = BookVisualizer("books.db")
 visualizer.plot_publish_year_distribution()
-

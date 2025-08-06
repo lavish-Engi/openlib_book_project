@@ -10,13 +10,15 @@ class BookCleaner:
         for book in raw_books:
             try:
                 title = book.get("title", "Unknown Title")
-                author = ", ".join(book.get("author_name", ["Unknown Author"]))
+                author = book.get("author", "Unknown Author")
                 year = book.get("first_publish_year", 0)
+                rating = book.get("rating", 0.0)
 
-                # Generate a realistic random rating between 3.0 and 5.0
-                rating = round(random.uniform(3.0, 5.0), 1)
+                if not rating or rating == 0.0:
+                    rating = round(random.uniform(3.0, 5.0), 1)
 
-                cleaned.append((title, author, year, rating))
+                cleaned.append((title, author, year, rating))  # Store as tuple
             except Exception as e:
-                self.logger.error(f"Error cleaning book: {e}")
+                self.logger.warning(f"Skipping book due to error: {e}")
+        self.logger.info(f"Cleaned {len(cleaned)} valid books.")
         return cleaned

@@ -1,5 +1,5 @@
 import requests
-from logger import setup_logger
+from modules.logger import setup_logger
 
 logger = setup_logger()
 
@@ -16,8 +16,7 @@ class BookFetcher:
             title = work.get("title")
             author = work.get("authors", [{}])[0].get("name")
             year = work.get("first_publish_year")
-            # Some works may not have ratings — safely handle it
-            rating = work.get("rating") or work.get("ratings_average") or work.get("ratings_sortable") or 0.0
+            rating = work.get("ratings_sortable") or 0.0  # use ratings_sortable if available
 
             books.append({
                 "title": title,
@@ -28,4 +27,5 @@ class BookFetcher:
 
         logger.info(f"Fetched {len(books)} books.")
         return books
+
 

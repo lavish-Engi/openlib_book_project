@@ -1,41 +1,38 @@
 import sqlite3
-from logger import setup_logger
-
-logger = setup_logger()
+from modules.logger import setup_logger
 
 class BookDatabase:
     def __init__(self, db_name="books.db"):
         self.conn = sqlite3.connect(db_name)
+        self.cursor = self.conn.cursor()
+        self.logger = setup_logger()
         self.create_table()
 
     def create_table(self):
-        query = """
-        CREATE TABLE IF NOT EXISTS books (
-            title TEXT,
-            author TEXT,
-            first_publish_year INTEGER,
-            rating REAL
-        )
-        """
-        self.conn.execute(query)
+        self.cursor.execute("""
+            CREATE TABLE IF NOT EXISTS books (
+                title TEXT,
+                author TEXT,
+                year INTEGER,
+                rating REAL
+            )
+        """)
         self.conn.commit()
-        logger.info("Books table ensured in database.")
 
     def insert_books(self, books):
-        logger.info("Inserting books into database...")
-        self.conn.execute("DELETE FROM books")  # Reset table before insert
+        self.cursor.execute("DELETE FROM books")
         for book in books:
-            self.conn.execute(
-                "INSERT INTO books (title, author, first_publish_year, rating) VALUES (?, ?, ?, ?)",
-                (book["title"], book["author"], book["first_publish_year"], book["rating"])
-            )
+            try:
+                self.cursor.execute(
+                    "INSERT INTO books (title, author, year, rating) VALUES (?, ?, ?, ?)",
+                    book  # since it's already a tuple
+                )
+            except Exception as e:
+                self.logger.warning(f"Failed to insert book: {e}")
         self.conn.commit()
-        logger.info("All books inserted successfully.")
 
     def fetch_all_books(self):
-        cursor = self.conn.execute("SELECT * FROM books")
-        return cursor.fetchall()
+        return self.cursor.execute("SELECT * FROM books").fetchall()
 
     def close(self):
         self.conn.close()
-        logger.info("Database connection closed.")

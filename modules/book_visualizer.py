@@ -1,10 +1,8 @@
-# modules/book_visualizer.py
-
 import matplotlib.pyplot as plt
 import pandas as pd
 import sqlite3
 import streamlit as st
-from logger import setup_logger
+from modules.logger import setup_logger
 
 logger = setup_logger()
 
@@ -18,19 +16,18 @@ class BookVisualizer:
             df = pd.read_sql_query("SELECT * FROM books", conn)
             conn.close()
 
-            st.subheader("📊 Books by First Publish Year")
+            if df.empty:
+                st.warning("No data to visualize.")
+                return
 
             plt.figure(figsize=(10, 6))
-            df['first_publish_year'].value_counts().sort_index().plot(kind='bar')
+            df["year"].value_counts().sort_index().plot(kind='bar')
             plt.title("Books by First Publish Year")
             plt.xlabel("Year")
             plt.ylabel("Count")
             plt.xticks(rotation=45)
             plt.tight_layout()
             st.pyplot(plt)
-
-            logger.info("Streamlit plot rendered successfully.")
-
         except Exception as e:
-            logger.error(f"Failed to plot data: {e}")
-            st.error("Failed to load plot.")
+            st.error("Failed to plot data.")
+            logger.error(f"Plot error: {e}")

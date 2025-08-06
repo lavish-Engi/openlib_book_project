@@ -17,7 +17,9 @@ class BookFetcher:
                 "title": work.get("title"),
                 "author": work.get("authors", [{}])[0].get("name"),
                 "first_publish_year": work.get("first_publish_year"),
-                "rating": work.get("ratings_sortable")
+                # FIX: Attempt to get rating from 'ratings_average'
+                "rating": work.get("ratings_average", 0.0)
             })
+
         logger.info(f"Fetched {len(books)} books.")
         return books

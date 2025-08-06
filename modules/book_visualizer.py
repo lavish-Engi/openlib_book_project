@@ -3,7 +3,7 @@
 import matplotlib.pyplot as plt
 import pandas as pd
 import sqlite3
-import streamlit_app as st
+import streamlit as st
 from logger import setup_logger
 
 logger = setup_logger()

@@ -1,6 +1,5 @@
 streamlit
 requests
-pandas
 matplotlib
-sqlalchemy
-pymysql
+seaborn
+pandas

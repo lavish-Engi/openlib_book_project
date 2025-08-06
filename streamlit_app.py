@@ -27,6 +27,9 @@ db.close()
 # Step 4: Show Data
 st.subheader("📄 Book Data Table")
 
+# Trim each row to the first 4 columns (ignore extra fields, if any)
+books = [row[:4] for row in books]
+
 # Create DataFrame safely
 try:
     df = pd.DataFrame(books, columns=["Title", "Author", "Year", "Rating"])

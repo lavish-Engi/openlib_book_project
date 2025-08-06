@@ -28,14 +28,13 @@ db.close()
 st.subheader("📄 Book Data Table")
 
 try:
-    # Correct order: (title, author, first_publish_year, rating)
-    df = pd.DataFrame(books, columns=["Title", "Author", "Year", "Rating"])
-except ValueError as e:
+    # Assuming 5 columns are returned: (ID, Title, Author, Year, Rating)
+    df = pd.DataFrame(books, columns=["ID", "Title", "Author", "Year", "Rating"])
+    df = df.drop(columns=["ID"])  # Remove ID from display
+except Exception as e:
     st.error(f"❌ Data format error: {e}")
     st.stop()
 
-# Reorder to display properly
-df = df[["Title", "Author", "Year", "Rating"]]
 st.dataframe(df)
 
 # Step 5: Visualize

@@ -13,13 +13,19 @@ class BookFetcher:
 
         books = []
         for work in data.get("works", []):
+            title = work.get("title")
+            author = work.get("authors", [{}])[0].get("name")
+            year = work.get("first_publish_year")
+            # Some works may not have ratings — safely handle it
+            rating = work.get("rating") or work.get("ratings_average") or work.get("ratings_sortable") or 0.0
+
             books.append({
-                "title": work.get("title"),
-                "author": work.get("authors", [{}])[0].get("name"),
-                "first_publish_year": work.get("first_publish_year"),
-                # FIX: Attempt to get rating from 'ratings_average'
-                "rating": work.get("ratings_average", 0.0)
+                "title": title,
+                "author": author,
+                "first_publish_year": year,
+                "rating": rating
             })
 
         logger.info(f"Fetched {len(books)} books.")
         return books
+

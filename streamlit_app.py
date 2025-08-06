@@ -27,16 +27,15 @@ db.close()
 # Step 4: Show Data
 st.subheader("📄 Book Data Table")
 
-# Trim each row to the first 4 columns (ignore extra fields, if any)
-books = [row[:4] for row in books]
-
-# Create DataFrame safely
 try:
+    # Correct order: (title, author, first_publish_year, rating)
     df = pd.DataFrame(books, columns=["Title", "Author", "Year", "Rating"])
 except ValueError as e:
     st.error(f"❌ Data format error: {e}")
     st.stop()
 
+# Reorder to display properly
+df = df[["Title", "Author", "Year", "Rating"]]
 st.dataframe(df)
 
 # Step 5: Visualize

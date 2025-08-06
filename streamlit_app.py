@@ -10,7 +10,7 @@ from modules.book_visualizer import BookVisualizer
 st.title("📚 Top 100 Fiction Books from OpenLibrary")
 
 # Step 1: Fetch books
-st.info("Fetching books from OpenLibrary...")
+st.info("📡 Fetching books from OpenLibrary...")
 fetcher = BookFetcher()
 raw_books = fetcher.fetch_books()
 
@@ -25,7 +25,9 @@ books = db.fetch_all_books()
 db.close()
 
 # Step 4: Show Data
-df = pd.DataFrame(books, columns=["Title", "Author", "Year", "Rating"])
+df = pd.DataFrame(books)
+df.columns = ["Title", "Author", "Year", "Rating"]
+
 st.subheader("📄 Book Data Table")
 st.dataframe(df)
 
@@ -33,3 +35,4 @@ st.dataframe(df)
 st.subheader("📊 Books by First Publish Year")
 visualizer = BookVisualizer("books.db")
 visualizer.plot_publish_year_distribution()
+
